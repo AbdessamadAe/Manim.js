@@ -33,7 +33,7 @@ export const Line: React.FC<ReactLineProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const lineRef = useRef<LineDrawable | null>(null);
   const frameCountRef = useRef(0);
-  const animationIdRef = useRef<number>();
+  const animationIdRef = useRef<number>(null);
 
   const animate = useCallback(() => {
     const canvas = canvasRef.current;
@@ -106,7 +106,7 @@ export const Line: React.FC<ReactLineProps> = ({
     } else {
       // If not animated, draw immediately at full completion
       frameCountRef.current = start + 1;
-      lineRef.current.timer.advance = () => 1; // Force complete
+      lineRef.current.forceComplete(); // Force complete
       lineRef.current.show();
     }
 

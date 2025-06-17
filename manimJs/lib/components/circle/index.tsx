@@ -32,7 +32,7 @@ export const Circle: React.FC<ReactCircleProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const circleRef = useRef<CircleDrawable | null>(null);
   const frameCountRef = useRef(0);
-  const animationIdRef = useRef<number>();
+  const animationIdRef = useRef<number>(null);
 
   const animate = useCallback(() => {
     const canvas = canvasRef.current;
@@ -52,7 +52,7 @@ export const Circle: React.FC<ReactCircleProps> = ({
       ctx,
       frameCount: frameCountRef.current
     };
-    circleRef.current.canvasContext = canvasContext;
+    circleRef.current.setCanvasContext(canvasContext);
     
     // Draw circle
     circleRef.current.show();
@@ -104,7 +104,7 @@ export const Circle: React.FC<ReactCircleProps> = ({
     } else {
       // If not animated, draw immediately at full completion
       frameCountRef.current = start + 1;
-      circleRef.current.timer.advance = () => 1; // Force complete
+      circleRef.current.forceComplete(); // Force complete
       circleRef.current.show();
     }
 

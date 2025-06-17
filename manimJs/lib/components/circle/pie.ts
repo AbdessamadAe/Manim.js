@@ -71,4 +71,11 @@ export class Pie extends DrawableBase {
   isAnimationComplete(): boolean {
     return this.timer.isComplete();
   }
+
+  /**
+   * Force complete the animation
+   */
+  forceComplete(): void {
+    this.timer.advance = () => 1;
+  }
 }

@@ -1,5 +1,6 @@
-import type { CanvasContext, BaseDrawableProps, AnimationOptions } from '../core/types';
-import { LinearTimer, type AnimationTimer } from '../utils/timer';
+import type { CanvasContext, BaseDrawableProps } from '../core/types';
+import { LinearTimer } from '../utils/timer';
+import type { AnimationTimer } from '../core/types';
 
 /**
  * Base class for all drawable objects
@@ -105,5 +106,12 @@ export class DrawableBase {
   updateCanvasContext(canvasContext: CanvasContext): void {
     this.canvasContext = canvasContext;
     this.ctx = canvasContext.ctx;
+  }
+
+  /**
+   * Public method to update canvas context (for external use)
+   */
+  setCanvasContext(canvasContext: CanvasContext): void {
+    this.updateCanvasContext(canvasContext);
   }
 }

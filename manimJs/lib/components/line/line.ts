@@ -66,6 +66,13 @@ export class LineDrawable extends DrawableBase {
   }
 
   /**
+   * Force complete the animation
+   */
+  forceComplete(): void {
+    this.timer.advance = () => 1;
+  }
+
+  /**
    * Get the current length of the animated line
    */
   getCurrentLength(): number {

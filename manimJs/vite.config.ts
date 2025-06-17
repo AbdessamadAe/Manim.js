@@ -6,13 +6,29 @@ import dts from 'vite-plugin-dts'
 export default defineConfig({
   plugins: [
     react(),
-    dts({include: ['lib']})
+    dts({
+      include: ['lib/**/*.ts'],
+      exclude: ['**/*.test.*', '**/*.spec.*'],
+      outDir: 'dist',
+      entryRoot: 'lib',
+      insertTypesEntry: true
+    })
   ],
   build: {
     copyPublicDir: false,
     lib: {
       entry: resolve(__dirname, 'lib/main.ts'),
-      formats: ['es']
+      formats: ['es'],
+      fileName: 'manimjs'
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM'
+        }
+      }
     }
   }
 })
