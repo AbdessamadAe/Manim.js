@@ -1,34 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { useState } from 'react'
+import CircleDemo from './CircleDemo'
+import LineDemo from './LineDemo'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeDemo, setActiveDemo] = useState<'circle' | 'line'>('circle')
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="App">
+      <nav style={{ 
+        padding: '20px', 
+        backgroundColor: '#333', 
+        marginBottom: '0',
+        display: 'flex',
+        gap: '20px',
+        justifyContent: 'center'
+      }}>
+        <button 
+          onClick={() => setActiveDemo('circle')}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: activeDemo === 'circle' ? '#4CAF50' : '#666',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '16px'
+          }}
+        >
+          Circle Demo
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+        <button 
+          onClick={() => setActiveDemo('line')}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: activeDemo === 'line' ? '#4CAF50' : '#666',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            fontSize: '16px'
+          }}
+        >
+          Line Demo
+        </button>
+      </nav>
+      
+      {activeDemo === 'circle' && <CircleDemo />}
+      {activeDemo === 'line' && <LineDemo />}
+    </div>
   )
 }
 
