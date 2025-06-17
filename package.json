@@ -1,0 +1,29 @@
+{
+  "name": "manimjs",
+  "version": "1.0.0",
+  "description": "react library for manim",
+  "keywords": [
+    "manim",
+    "react",
+    "3blue1brown",
+    "p5.js"
+  ],
+  "homepage": "https://github.com/AbdessamadAe/Manim.js#readme",
+  "bugs": {
+    "url": "https://github.com/AbdessamadAe/Manim.js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbdessamadAe/Manim.js.git"
+  },
+  "license": "ISC",
+  "author": "Abdessamad Ait Elmouden",
+  "type": "commonjs",
+  "main": "Manim.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
