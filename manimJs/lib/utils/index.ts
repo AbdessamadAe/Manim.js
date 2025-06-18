@@ -14,3 +14,6 @@ export * from './math';
 
 // Color utilities
 export * from './colors';
+
+// Easing functions
+export * from './easing';

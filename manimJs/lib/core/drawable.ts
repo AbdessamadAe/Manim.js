@@ -1,12 +1,13 @@
 import type { CanvasContext, BaseDrawableProps } from '../core/types';
 import { LinearTimer } from '../utils/timer';
 import type { AnimationTimer } from '../core/types';
+import type { PathMorphable } from './pathMorph';
 
 /**
  * Base class for all drawable objects
  * Replicates the PointBase functionality from original Manim.js
  */
-export class DrawableBase {
+export class DrawableBase implements PathMorphable {
   protected ctx: CanvasRenderingContext2D;
   protected canvasContext: CanvasContext;
   public x: number;
@@ -26,6 +27,18 @@ export class DrawableBase {
   protected moveTimer?: AnimationTimer;
   protected moveDuration: number = 0;
   protected moveF: number = 0;
+
+  // Shake and jump properties
+  protected isShaking: boolean = false;
+  protected isJumping: boolean = false;
+  protected shakeAmplitude: number = 0;
+  protected jumpAmplitude: number = 0;
+  protected shakeTimer?: AnimationTimer;
+  protected jumpTimer?: AnimationTimer;
+
+  // Path morphing properties
+  private morphingPath?: string;
+  private isMorphing: boolean = false;
 
   constructor(canvasContext: CanvasContext, props: BaseDrawableProps = {}) {
     this.canvasContext = canvasContext;
@@ -76,10 +89,60 @@ export class DrawableBase {
   }
 
   /**
+   * Shake vertically as emphasis
+   */
+  shake(amplitude: number, duration: number = 1): void {
+    this.shakeAmplitude = amplitude;
+    this.shakeTimer = new LinearTimer(Math.round(60 * duration)); // assuming 60fps
+    this.isShaking = true;
+  }
+
+  /**
+   * Jump vertically as emphasis
+   */
+  jump(amplitude: number, duration: number = 1): void {
+    this.jumpAmplitude = amplitude;
+    this.jumpTimer = new LinearTimer(Math.round(60 * duration)); // assuming 60fps
+    this.isJumping = true;
+  }
+
+  /**
+   * Apply shake effect to position
+   */
+  protected applyShakeEffect(): void {
+    if (this.isShaking && this.shakeTimer) {
+      if (!this.shakeTimer.isComplete()) {
+        const shakeOffset = Math.sin(this.canvasContext.frameCount * 0.5) * this.shakeAmplitude;
+        this.y += shakeOffset;
+        this.shakeTimer.advance();
+      } else {
+        this.isShaking = false;
+      }
+    }
+  }
+
+  /**
+   * Apply jump effect to position
+   */
+  protected applyJumpEffect(): void {
+    if (this.isJumping && this.jumpTimer) {
+      if (!this.jumpTimer.isComplete()) {
+        const progress = this.jumpTimer.advance();
+        const jumpOffset = Math.sin(progress * Math.PI) * this.jumpAmplitude;
+        this.y -= jumpOffset; // Negative for upward movement
+      } else {
+        this.isJumping = false;
+      }
+    }
+  }
+
+  /**
    * Should be called before rendering to update movement and setup context
    */
   protected showSetup(): void {
     this.updateMovement();
+    this.applyShakeEffect();
+    this.applyJumpEffect();
     
     // Set basic drawing properties
     this.ctx.strokeStyle = this.color;
@@ -113,5 +176,64 @@ export class DrawableBase {
    */
   setCanvasContext(canvasContext: CanvasContext): void {
     this.updateCanvasContext(canvasContext);
+  }
+
+  /**
+   * Default implementation of getPath - should be overridden by subclasses
+   */
+  getPath(): string {
+    // Default implementation returns a small circle at the object's position
+    const radius = 1;
+    return `M ${this.x + radius},${this.y} A ${radius},${radius} 0 1,1 ${this.x - radius},${this.y} A ${radius},${radius} 0 1,1 ${this.x + radius},${this.y} Z`;
+  }
+
+  /**
+   * Render from an SVG path during morphing
+   */
+  renderFromPath(pathString: string): void {
+    this.morphingPath = pathString;
+    this.isMorphing = true;
+    this.renderMorphedPath();
+  }
+
+  /**
+   * Render the morphed path to canvas
+   */
+  protected renderMorphedPath(): void {
+    if (!this.morphingPath) return;
+
+    this.ctx.save();
+    
+    try {
+      const path2D = new Path2D(this.morphingPath);
+      
+      // Apply styling
+      this.ctx.fillStyle = this.color;
+      this.ctx.strokeStyle = this.color;
+      this.ctx.lineWidth = this.strokeWidth;
+      
+      // Fill and stroke the path
+      this.ctx.fill(path2D);
+      this.ctx.stroke(path2D);
+    } catch (error) {
+      console.warn('Failed to render morphed path:', error);
+    } finally {
+      this.ctx.restore();
+    }
+  }
+
+  /**
+   * Check if currently morphing
+   */
+  protected isMorphingActive(): boolean {
+    return this.isMorphing;
+  }
+
+  /**
+   * Clear morphing state
+   */
+  clearMorphing(): void {
+    this.isMorphing = false;
+    this.morphingPath = undefined;
   }
 }
