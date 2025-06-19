@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import CircleDemo from './CircleDemo'
 import LineDemo from './LineDemo'
 import SceneDemo from './SceneDemo'
-import TextDemo from './TextDemo'
 import './App.css'
 
 function App() {
@@ -18,20 +17,6 @@ function App() {
         gap: '20px',
         justifyContent: 'center'
       }}>
-        <button 
-          onClick={() => setActiveDemo('text')}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: activeDemo === 'text' ? '#4CAF50' : '#666',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Text Demo
-        </button>
         <button 
           onClick={() => setActiveDemo('scene')}
           style={{
@@ -76,7 +61,6 @@ function App() {
         </button>
       </nav>
       
-      {activeDemo === 'text' && <TextDemo />}
       {activeDemo === 'scene' && <SceneDemo />}
       {activeDemo === 'circle' && <CircleDemo />}
       {activeDemo === 'line' && <LineDemo />}

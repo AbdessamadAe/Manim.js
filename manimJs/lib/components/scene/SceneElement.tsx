@@ -3,15 +3,13 @@ import { useScene } from './Scene';
 import { CircleDrawable } from '../circle/circle';
 import { SquareDrawable } from '../square/square';
 import { LineDrawable } from '../line/line';
-import { TextDrawable, TextFadeDrawable, TextWriteInDrawable, TextRollDrawable } from '../text';
 import type { SceneElementProps } from './types';
 import type { CircleProps } from '../circle/types';
 import type { SquareProps } from '../square/types';
 import type { LineProps } from '../line/types';
-import type { TextProps, TextFadeProps, TextWriteInProps, TextRollProps } from '../text/types';
 
 interface GenericSceneElementProps extends SceneElementProps {
-  componentType: 'circle' | 'square' | 'line' | 'text' | 'textFade' | 'textWriteIn' | 'textRoll';
+  componentType: 'circle' | 'square' | 'line';
   [key: string]: any;
 }
 
@@ -45,30 +43,6 @@ export const SceneElement: React.FC<GenericSceneElementProps> = ({ componentType
           { ...props, start: 0 } as LineProps
         );
         drawable.setSceneMode(true);
-        break;
-      case 'text':
-        drawable = new TextDrawable(
-          { ctx: canvasContext, frameCount: 0 },
-          { ...props, start: 0 } as TextProps
-        );
-        break;
-      case 'textFade':
-        drawable = new TextFadeDrawable(
-          { ctx: canvasContext, frameCount: 0 },
-          { ...props, start: 0 } as TextFadeProps
-        );
-        break;
-      case 'textWriteIn':
-        drawable = new TextWriteInDrawable(
-          { ctx: canvasContext, frameCount: 0 },
-          { ...props, start: 0 } as TextWriteInProps
-        );
-        break;
-      case 'textRoll':
-        drawable = new TextRollDrawable(
-          { ctx: canvasContext, frameCount: 0 },
-          { ...props, start: 0 } as TextRollProps
-        );
         break;
       default:
         console.warn(`Unknown component type: ${componentType}`);
@@ -106,19 +80,3 @@ export const Line: React.FC<LineProps & { id?: string }> = (props) => (
   <SceneElement componentType="line" {...props} />
 );
 
-// Text component wrappers
-export const Text: React.FC<TextProps & { id?: string }> = (props) => (
-  <SceneElement componentType="text" {...props} />
-);
-
-export const TextFade: React.FC<TextFadeProps & { id?: string }> = (props) => (
-  <SceneElement componentType="textFade" {...props} />
-);
-
-export const TextWriteIn: React.FC<TextWriteInProps & { id?: string }> = (props) => (
-  <SceneElement componentType="textWriteIn" {...props} />
-);
-
-export const TextRoll: React.FC<TextRollProps & { id?: string }> = (props) => (
-  <SceneElement componentType="textRoll" {...props} />
-);
